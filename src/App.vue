@@ -1,10 +1,9 @@
 <script setup>
 
-import Index_ from "@/views/login/index_.vue";
 </script>
 
 <template>
-  <index_></index_>
+  <router-view></router-view>
 </template>
 
 <style scoped>

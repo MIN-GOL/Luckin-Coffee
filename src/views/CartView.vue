@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  首页View
+  卡片View
 </template>
 
 <style scoped>

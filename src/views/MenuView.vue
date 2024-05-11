@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  首页View
+  菜单View
 </template>
 
 <style scoped>

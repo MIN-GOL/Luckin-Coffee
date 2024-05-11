@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-
-const isRegister = ref(true)
+// import { useUserStore } from '@/stores/index.js'
+const show = ref(false)
 const from = ref()
 const fromModel = ref({
   username: '',
@@ -10,6 +10,11 @@ const fromModel = ref({
   email: '',
   sms: ''
 })
+
+const showPopup = () => {
+  show.value = true
+}
+// const userStore = useUserStore
 
 </script>
 
@@ -63,15 +68,20 @@ const fromModel = ref({
         <van-button class="register_btn"
                     round block type="primary"
                     plain
-                    native-type="submit"
+                    @click="showPopup"
                     style="margin-top: 2rem"
         >
           注册
         </van-button>
+        <van-popup
+            v-model:show="showBottom"
+            position="bottom"
+            :style="{ height: '30%' }"
+        />
       </div>
     </van-form>
   </div>
-  <!-- 注册 -->
+  <!-- 忘记密码 -->
   <div class="login-box" v-else>
     <div style="margin-left: 2rem">
       <div class="welcome-title">忘记密码!</div>
