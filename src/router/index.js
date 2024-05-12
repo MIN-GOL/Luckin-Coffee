@@ -13,6 +13,7 @@ const router = createRouter({
     {
       path: '/',
       component: LayoutView,
+      redirect:'/home',
       children:[
         {
           path: '/home',

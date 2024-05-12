@@ -3,6 +3,7 @@ import { ref } from 'vue'
 // import { useUserStore } from '@/stores/index.js'
 const show = ref(false)
 const from = ref()
+const isRegister = ref(false)
 const fromModel = ref({
   username: '',
   password: '',
@@ -15,6 +16,8 @@ const showPopup = () => {
   show.value = true
 }
 // const userStore = useUserStore
+
+
 
 </script>
 
@@ -29,7 +32,7 @@ const showPopup = () => {
       <div class="title">Luckin Coffee</div>
     </template>
     <template #right>
-      <div class="index">首页</div>
+      <router-link class="index" to="/home">首页</router-link>
     </template>
   </van-nav-bar>
   <!-- 登录 -->
