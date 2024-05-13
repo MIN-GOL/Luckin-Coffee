@@ -51,23 +51,19 @@ const showCoffee = (type) => {
 }
 
 // 获取最热
-const showHot = () => {
-  isHot.value = true
-  axios.get('http://www.kangliuyong.com:10002/typeProducts',{
-    params: {
-      key: "isHot",
-      value: 1,
-      appkey: "U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA="
-    }
-  }).then(function (res) {hot.value = res.data.result})
-}
+axios.get('http://www.kangliuyong.com:10002/typeProducts',{
+  params: {
+    key: "isHot",
+    value: 1,
+    appkey: "U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA="
+  }
+}).then(function (res) {hot.value = res.data.result})
 
-showHot()
 
 </script>
 
 <template>
-
+  <!--  搜索框 -->
   <van-search
       style="width: 90vw"
       v-model="value"
@@ -75,6 +71,7 @@ showHot()
       placeholder="请输入搜索关键词"
       @click="show"/>
 
+  <!--  左侧导航栏 -->
   <div class="contain">
     <div class="bar" >
       <van-sidebar v-model="active">
@@ -87,28 +84,22 @@ showHot()
       </van-sidebar>
     </div>
 
-    <ul class="products" v-if="isHot">
-      <li style="list-style: none" v-for="(i, index) in hot" v-bind:key="index">
-        <img :src="i.smallImg" alt="">
-        <div class="iname">{{ i.name }}</div>
-        <div class="enname">{{ i.enname }}</div>
-        <div class="price">{{ i.price }}</div>
-      </li>
-    </ul>
-
-    <ul class="products" v-else>
-      <li style="list-style: none" v-for="(i, index) in list" v-bind:key="index">
-        <img :src="i.smallImg" alt="">
-        <div class="iname">{{ i.name }}</div>
-        <div class="enname">{{ i.enname }}</div>
-        <div class="price">{{ i.price }}</div>
+    <!--  详情 -->
+    <ul class="products">
+      <li style="list-style: none" v-for="(i, index) in (isHot? hot : list)" v-bind:key="index">
+        <div class="item">
+          <img :src="i.smallImg" alt="">
+          <div class="iname">{{ i.name }}</div>
+          <div class="enname">{{ i.enname }}</div>
+          <div class="price">{{ i.price }}</div>
+        </div>
       </li>
     </ul>
   </div>
 
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .contain{
   display: flex;
 }
