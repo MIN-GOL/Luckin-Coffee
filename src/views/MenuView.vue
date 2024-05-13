@@ -3,23 +3,18 @@
 import {ref} from "vue";
 import axios from "axios";
 
+// 列表
+const list = ref([])
+const coffee_list = ref([])
 const hot = ref([])
+
+
+// 变量
 const active = ref(0);
 const value = ref()
-const coffee_list = ref([])
-const ok = ref(true)
 
-// 获取最热产品
-axios.get('http://www.kangliuyong.com:10002/typeProducts',{
-  params: {
-    key: "isHot",
-    value: 1,
-    appkey: "U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA="
-  }
-}).then(function (res) {
-  hot.value = res.data.result
-  ok.value = false
-})
+// 控制流
+const isHot = ref(true)
 
 // 点击事件
 const show = () => {
@@ -39,7 +34,35 @@ axios.get('http://www.kangliuyong.com:10002/type',{
 }).then(function (res) { coffee_list.value = res.data.result})
 
 // 副标签点击
-const onChange = (index) => console.log(index);
+const showCoffee = (type) => {
+  console.log("获取当前分类:" + type);
+  isHot.value = false
+  // 获取产品
+  axios.get('http://www.kangliuyong.com:10002/typeProducts',{
+    params: {
+      key: "type",
+      value: type,
+      appkey: "U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA="
+    }
+  }).then(function (res) {
+    list.value = res.data.result
+    ok.value = false
+  })
+}
+
+// 获取最热
+const showHot = () => {
+  isHot.value = true
+  axios.get('http://www.kangliuyong.com:10002/typeProducts',{
+    params: {
+      key: "isHot",
+      value: 1,
+      appkey: "U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA="
+    }
+  }).then(function (res) {hot.value = res.data.result})
+}
+
+showHot()
 
 </script>
 
@@ -54,17 +77,27 @@ const onChange = (index) => console.log(index);
 
   <div class="contain">
     <div class="bar" >
-      <van-sidebar v-model="active" @change="onChange">
+      <van-sidebar v-model="active">
+        <van-sidebar-item title="热卖推荐" @click="showHot"/>
         <van-sidebar-item
             v-for="(item, index) in coffee_list"
             v-bind:key="index"
+            @click="showCoffee(item.type)"
             :title="`${item.typeDesc}`"/>
       </van-sidebar>
     </div>
 
-    <van-loading color="#0c34ba" v-if="ok"/>
-    <ul class="products">
+    <ul class="products" v-if="isHot">
       <li style="list-style: none" v-for="(i, index) in hot" v-bind:key="index">
+        <img :src="i.smallImg" alt="">
+        <div class="iname">{{ i.name }}</div>
+        <div class="enname">{{ i.enname }}</div>
+        <div class="price">{{ i.price }}</div>
+      </li>
+    </ul>
+
+    <ul class="products" v-else>
+      <li style="list-style: none" v-for="(i, index) in list" v-bind:key="index">
         <img :src="i.smallImg" alt="">
         <div class="iname">{{ i.name }}</div>
         <div class="enname">{{ i.enname }}</div>
