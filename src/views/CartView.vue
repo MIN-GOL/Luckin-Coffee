@@ -18,5 +18,8 @@ const cart_list = ref([])
 </template>
 
 <style lang="scss" scoped>
-
+.van-nav-bar{
+  --van-nav-bar-text-color: #0c34ba;
+  --van-nav-bar-icon-color: #0c34ba;
+}
 </style>
