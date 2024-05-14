@@ -5,6 +5,7 @@ import axios from "axios";
 
 const like = ref(false);
 const onClickLeft = () => history.back();
+const count = ref(1);
 const route = useRoute()
 const coffee_pid = ref(route.params.pid)
 const coffee_info = ref([])
@@ -17,7 +18,6 @@ const clickLike = () => {
   like.value = !like.value
 }
 
-console.log(coffee_info)
 // 获取标签页
 axios.get('http://www.kangliuyong.com:10002/productDetail', {
   params: {
@@ -28,7 +28,14 @@ axios.get('http://www.kangliuyong.com:10002/productDetail', {
   coffee_info.value = res.data.result[0]
 })
 
+// test
+const clickCount = () =>{
+  console.log(`您当前一共点了${count.value}杯咖啡` )
+}
 
+clickCount()
+
+console.log(coffee_info.desc)
 </script>
 
 <template>
@@ -60,24 +67,39 @@ axios.get('http://www.kangliuyong.com:10002/productDetail', {
       <!-- 参数 -->
       <div class="detail-rules">
         <hr>
-        参数
+        <div v-if="coffee_info.tem">{{ coffee_info.tem_desc }}</div>
+        <div v-if="coffee_info.milk">{{ coffee_info.milk_desc }}</div>
+        <div v-if="coffee_info.sugar">{{ coffee_info.sugar_desc }}</div>
+        <div v-if="coffee_info.cream">{{ coffee_info.cream_desc }}</div>
       </div>
 
       <!-- 选择数量 -->
       <div class="select-count-box">
-        选择数量
+        <div>选择数量</div>
+        <van-stepper
+            @click="clickCount"
+            v-model="count"
+            theme="round"
+            button-size="22"
+            class="step"
+            disable-input />
       </div>
 
       <!-- 商品描述 -->
-      <div class="detail-desc">
-        商品描述
+      <div class="detail-desc" >
+        <div class="tag">
+          商品描述
+        </div>
+        <span class="desc"
+              v-for="(item, index) in coffee_info.desc && coffee_info.desc.split('\n')"
+              :key="index">
+          {{ index + 1 + "、" + item }}<br/>
+        </span>
       </div>
-
-      <div style="word-wrap:break-word;"> {{ coffee_info }}</div>
     </div>
 
     <!-- 底部导航栏 -->
-    <van-tabbar v-model="active" route>
+    <van-tabbar route>
       <van-tabbar-item icon="../src/assets/cart.png" to="/cart">购物袋</van-tabbar-item>
       <van-tabbar-item @click="clickLike">
         <span v-if="like">已收藏</span>
@@ -96,6 +118,8 @@ axios.get('http://www.kangliuyong.com:10002/productDetail', {
 <style lang="scss" scoped>
 .contain{
   background-color: #efefef;
+  width: 100%;
+  height: 100%;
 }
 
 .van-nav-bar {
@@ -143,5 +167,41 @@ axios.get('http://www.kangliuyong.com:10002/productDetail', {
   }
 }
 
+.detail-rules{
+  div{
+    font-weight: 350;
+    margin: 1rem 0;
+  }
+}
 
-</style>
+.select-count-box{
+  display: flex;
+  font-size: 14px;
+  margin-top: 2rem;
+  font-weight: 300;
+  color: #232323;
+  .step{
+    position: absolute;
+    margin-right: 1rem;
+    right: 0;
+  }
+}
+
+::v-deep(.van-stepper--round .van-stepper__plus ) {
+  background: #ee0a24;
+}
+
+.detail-desc{
+  margin-top: 2rem;
+
+  .tag{
+    color: #232323;
+    font-size: 14px;
+    margin-bottom: .8rem;
+  }
+  .desc{
+    color: #666;
+    font-size: 12px;
+  }
+}
+</style>}

@@ -20,6 +20,7 @@ axios.get('http://www.kangliuyong.com:10002/typeProducts',{
   }
 }).then(function (res) {hot.value = res.data.result})
 
+
 </script>
 
 <template>
@@ -49,10 +50,12 @@ axios.get('http://www.kangliuyong.com:10002/typeProducts',{
 
   <ul class="products">
     <li style="list-style: none" v-for="(i, index) in hot" v-bind:key="index">
+      <router-link class="item" :to="`/detail/${i.pid}`">
       <img :src="i.smallImg" alt="">
       <div class="iname">{{ i.name }}</div>
       <div class="enname">{{ i.enname }}</div>
       <div class="price">{{ i.price }}</div>
+      </router-link>
     </li>
   </ul>
 </template>

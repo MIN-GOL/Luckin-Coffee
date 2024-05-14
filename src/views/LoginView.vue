@@ -4,6 +4,7 @@ import { ref } from 'vue'
 const show = ref(false)
 const from = ref()
 const isRegister = ref(false)
+
 const fromModel = ref({
   username: '',
   password: '',
