@@ -54,7 +54,6 @@ console.log(coffee_info.desc)
 
     <!-- 卡片 -->
     <div class="detail-info">
-
       <!-- name & enname & price -->
       <div class="detail-pro">
         <div class="names">
@@ -74,19 +73,22 @@ console.log(coffee_info.desc)
       </div>
 
       <!-- 选择数量 -->
+      <hr>
       <div class="select-count-box">
-        <div>选择数量</div>
-        <van-stepper
-            @click="clickCount"
-            v-model="count"
-            theme="round"
-            button-size="22"
-            class="step"
-            disable-input />
+          <div>选择数量</div>
+          <van-stepper
+              @click="clickCount"
+              v-model="count"
+              theme="round"
+              button-size="22"
+              class="step"
+              disable-input/>
       </div>
+
 
       <!-- 商品描述 -->
       <div class="detail-desc" >
+        <hr>
         <div class="tag">
           商品描述
         </div>
@@ -112,14 +114,15 @@ console.log(coffee_info.desc)
         <van-button type="primary" to="/login" size="normal" round>加入购物袋</van-button>
       </div>
     </van-tabbar>
+
   </div>
 </template>
 
 <style lang="scss" scoped>
 .contain{
   background-color: #efefef;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
 }
 
 .van-nav-bar {
@@ -203,5 +206,11 @@ console.log(coffee_info.desc)
     color: #666;
     font-size: 12px;
   }
+}
+
+hr{
+  background-color: #e6e6e6;
+  height: 0.5px;
+  border: none
 }
 </style>}

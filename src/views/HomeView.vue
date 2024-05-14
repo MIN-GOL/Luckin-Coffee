@@ -20,14 +20,27 @@ axios.get('http://www.kangliuyong.com:10002/typeProducts',{
   }
 }).then(function (res) {hot.value = res.data.result})
 
-
+let getTimeState = () => {
+  let hours = new Date().getHours();
+  let state= ``;
+  if (hours >= 0 && hours <= 10) {
+    state = `早上好 !`;
+  } else if (hours > 10 && hours <= 14) {
+    state= `中午好 !`;
+  } else if (hours > 14 && hours <= 18) {
+    state= `下午好 !`;
+  } else if (hours > 18 && hours <= 24) {
+    state= `晚上好 !`;
+  }
+  return state;
+}
 </script>
 
 <template>
   <van-nav-bar>
     <template #left>
       <div>
-        下午好
+        {{getTimeState()}}
       </div>
       <div class="name">
         MINGOL
@@ -44,8 +57,10 @@ axios.get('http://www.kangliuyong.com:10002/typeProducts',{
 
   <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
     <van-swipe-item v-for="(banner, index) in banners" v-bind:key="index">
-      <img width="100%" v-bind:src="banner.bannerImg" alt="">
-    </van-swipe-item>s
+      <router-link :to="`/detail/${banner.pid}`">
+        <img width="100%" v-bind:src="banner.bannerImg" alt="">
+      </router-link>
+    </van-swipe-item>
   </van-swipe>
 
   <ul class="products">
@@ -94,5 +109,15 @@ axios.get('http://www.kangliuyong.com:10002/typeProducts',{
 }
 .products li:nth-child(2n+1){
   margin-right:2%;
+}
+
+.router-link-active {
+  text-decoration: none;
+  color: #000000;
+}
+
+a{
+  text-decoration: none;
+  color: #000000;
 }
 </style>
