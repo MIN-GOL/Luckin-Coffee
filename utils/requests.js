@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { useUserStore } from '@/stores'
-import { ElMessage } from 'element-plus'
 import router from '@/router/index.js'
 const baseURL = 'http://www.kangliuyong.com:10002'
 
