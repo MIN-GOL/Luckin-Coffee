@@ -59,7 +59,9 @@ const onSubmitLogin = (values) => {
     res = res.data
     // 登录成功
     if(res.code === 200){
+      // 设置token
       showSuccessToast(res.msg+'\n'+'正在跳转');
+      localStorage.setItem('token', res.token)
       setTimeout(()=>{
         router.push('/home')
       },2500)

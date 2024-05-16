@@ -35,7 +35,6 @@ const clickCount = () =>{
 
 clickCount()
 
-console.log(coffee_info.desc)
 </script>
 
 <template>

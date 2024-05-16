@@ -1,24 +1,43 @@
 <script setup>
 import {ref} from 'vue'
 import axios from 'axios'
+
+const username = ref('')
 const banners = ref([])
 const hot = ref([])
+const base_url = 'http://www.kangliuyong.com:10002'
+const key = 'U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA='
+const value = ref()
+const token = localStorage.getItem('token');
 
 // 获取轮播图
-axios.get('http://www.kangliuyong.com:10002/banner',{
+axios.get(`${base_url}/banner`,{
   params: {
-    appkey: "U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA="
+    appkey: key
   }
 }).then(function (res) {banners.value = res.data.result})
 
 // 获取最热产品
-axios.get('http://www.kangliuyong.com:10002/typeProducts',{
+axios.get(`${base_url}/typeProducts`,{
   params: {
     key: "isHot",
     value: 1,
-    appkey: "U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA="
+    appkey: key
   }
 }).then(function (res) {hot.value = res.data.result})
+
+// 获取个人信息
+axios.get(`${base_url}/findMy`,{
+  params: {
+    tokenString: token,
+    appkey: key
+  }
+}).then(function (res) {
+  res = res.data
+  if (res.code === 'A001') {
+    username.value = res.result[0].nickName
+  }
+})
 
 let getTimeState = () => {
   let hours = new Date().getHours();
@@ -42,16 +61,23 @@ let getTimeState = () => {
       <div>
         {{getTimeState()}}
       </div>
-      <div class="name">
-        MINGOL
+      <div class="name" v-if="username">
+        {{ username }}
+      </div>
+      <div class="name" v-else>
+        <router-link to="/login" class="name">
+          登录
+        </router-link>
       </div>
     </template>
     <template #right>
-      <van-search
-          style="padding: 0"
-          v-model="value"
-          shape="round"
-          placeholder="请输入搜索关键词" />
+      <router-link to="/select">
+        <van-search
+            style="padding: 0"
+            v-model="value"
+            shape="round"
+            placeholder="请输入搜索关键词" />
+      </router-link>
     </template>
   </van-nav-bar>
 

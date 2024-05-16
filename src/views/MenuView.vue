@@ -7,6 +7,8 @@ import axios from "axios";
 const list = ref([])
 const coffee_list = ref([])
 const hot = ref([])
+const base_url = 'http://www.kangliuyong.com:10002'
+const key = 'U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA='
 
 
 // 变量
@@ -16,20 +18,10 @@ const value = ref()
 // 控制流
 const isHot = ref(true)
 
-// 点击事件
-const show = () => {
-  showDialog({
-    title: '提示',
-    message: '您点击了搜索框',
-  }).then(() => {
-    // on close
-  });
-}
-
 // 获取标签页
-axios.get('http://www.kangliuyong.com:10002/type', {
+axios.get(`${base_url}/type`, {
   params: {
-    appkey: "U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA="
+    appkey: key
   }
 }).then(function (res) {
   coffee_list.value = res.data.result
@@ -40,11 +32,11 @@ const showCoffee = (type) => {
   console.log("获取当前分类:" + type);
   isHot.value = false
   // 获取产品
-  axios.get('http://www.kangliuyong.com:10002/typeProducts', {
+  axios.get(`${base_url}/typeProducts`, {
     params: {
       key: "type",
       value: type,
-      appkey: "U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA="
+      appkey: key
     }
   }).then(function (res) {
     list.value = res.data.result
@@ -52,11 +44,11 @@ const showCoffee = (type) => {
 }
 
 // 获取最热
-axios.get('http://www.kangliuyong.com:10002/typeProducts', {
+axios.get(`${base_url}/typeProducts`, {
   params: {
     key: "isHot",
     value: 1,
-    appkey: "U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA="
+    appkey: key
   }
 }).then(function (res) {
   hot.value = res.data.result
@@ -66,12 +58,13 @@ axios.get('http://www.kangliuyong.com:10002/typeProducts', {
 
 <template>
   <!--  搜索框 -->
-  <van-search
-      style="width: 90vw"
-      v-model="value"
-      shape="round"
-      placeholder="请输入搜索关键词"
-      @click="show"/>
+  <router-link to="/select">
+    <van-search
+        style="width: 90vw"
+        v-model="value"
+        shape="round"
+        placeholder="请输入搜索关键词"/>
+  </router-link>
 
   <!--  左侧导航栏 -->
   <div class="contain">
