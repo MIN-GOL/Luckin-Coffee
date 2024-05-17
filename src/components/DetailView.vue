@@ -9,6 +9,8 @@ const count = ref(1);
 const route = useRoute()
 const coffee_pid = ref(route.params.pid)
 const coffee_info = ref([])
+const detail = ref([])
+
 const icon = {
   active: '../src/assets/collected.png',
   inactive: '../src/assets/collect.png',
@@ -17,6 +19,7 @@ const icon = {
 const clickLike = () => {
   like.value = !like.value
 }
+
 
 // 获取标签页
 axios.get('http://www.kangliuyong.com:10002/productDetail', {
@@ -31,6 +34,10 @@ axios.get('http://www.kangliuyong.com:10002/productDetail', {
 // test
 const clickCount = () =>{
   console.log(`您当前一共点了${count.value}杯咖啡` )
+}
+
+const choose = (item) => {
+  console.log(item)
 }
 
 clickCount()
@@ -65,10 +72,55 @@ clickCount()
       <!-- 参数 -->
       <div class="detail-rules">
         <hr>
-        <div v-if="coffee_info.tem">{{ coffee_info.tem_desc }}</div>
-        <div v-if="coffee_info.milk">{{ coffee_info.milk_desc }}</div>
-        <div v-if="coffee_info.sugar">{{ coffee_info.sugar_desc }}</div>
-        <div v-if="coffee_info.cream">{{ coffee_info.cream_desc }}</div>
+        <!-- 温度 -->
+        <div v-if="coffee_info.tem">
+          <div>
+            {{ coffee_info.tem_desc }}
+          </div>
+          <button
+              @click="choose(item, index)"
+              v-for="(item, index) in coffee_info.tem.split('/')"
+              :key="index">
+            {{ item }}
+          </button>
+        </div>
+        <!-- 奶 -->
+        <div v-if="coffee_info.milk">
+          <div>
+            {{ coffee_info.milk_desc }}
+          </div>
+          <button
+              @click="choose(item)"
+              v-for="(item, index) in coffee_info.milk.split('/')"
+              :key="index">
+            {{ item }}
+          </button>
+        </div>
+        <!-- 糖 -->
+        <div v-if="coffee_info.sugar">
+          <div>
+            {{ coffee_info.sugar_desc }}
+          </div>
+          <button
+              @click="choose(item)"
+              v-for="(item, index) in coffee_info.sugar.split('/')"
+              :key="index">
+            {{ item }}
+          </button>
+        </div>
+        <!-- 奶油 -->
+        <div v-if="coffee_info.cream">
+          <div>
+            {{ coffee_info.cream_desc }}
+          </div>
+          <button
+              :class="[active===true]"
+              @click="choose(item,index)"
+              v-for="(item, index) in coffee_info.cream.split('/')"
+              :key="index">
+            {{ item }}
+          </button>
+        </div>
       </div>
 
       <!-- 选择数量 -->
@@ -171,8 +223,28 @@ clickCount()
 
 .detail-rules{
   div{
+    display: flex;
+    font-size: 14px;
     font-weight: 350;
-    margin: 1rem 0;
+    margin: .5rem 0;
+    div{
+      width: 3rem;
+    }
+  }
+  .active{
+    background-color: #3762f0;
+    color: #fff;
+  }
+
+  button{
+    border: 0;
+    text-align: center;
+    width: 4.5rem;
+    line-height: .8rem;
+    height: 2rem;
+    background-color: #e8e8e8;
+    margin-right: .26667rem;
+    border-radius: 1rem;
   }
 }
 
