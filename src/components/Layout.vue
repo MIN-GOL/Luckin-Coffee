@@ -32,7 +32,7 @@ const tabbarArray = [
   },
   {
     name: "我的",
-    to:  "/mine",
+    to:  "/Mine",
     active: my_active,
     inactive: my,
   },

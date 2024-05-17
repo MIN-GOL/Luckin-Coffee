@@ -68,7 +68,7 @@ const clearStory = () => {
         left-arrow
         @click-left="onClickLeft">
       <template #right>
-        <form action="/">
+        <form action="/public">
           <van-search
               style="padding: 0"
               v-model="value"
@@ -87,7 +87,7 @@ const clearStory = () => {
           class="history-item"
           v-for="{item, index} in historyList"
           :key="index">
-        {{ item.title }}123
+        {{ item }}
       </div>
       <div class="search-btn" @click="clearStory">
         <div>清除所有搜索历史</div>

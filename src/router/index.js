@@ -1,12 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LoginView from '../views/LoginView.vue'
-import LayoutView from '../views/Layout.vue'
-import HomeView from "@/views/HomeView.vue";
-import CartView from "@/views/CartView.vue";
-import MenuView from "@/views/MenuView.vue";
-import MineView from "@/views/MineView.vue";
-import DetailView from "@/components/DetailView.vue";
-import SelectView from "@/components/SelectView.vue";
+import LoginView from '@/views/Auth/LoginView.vue'
+import LayoutView from '../components/Layout.vue'
+import HomeView from "@/views/User/HomeView.vue";
+import CartView from "@/views/User/CartView.vue";
+import MenuView from "@/views/User/MenuView.vue";
+import MineView from "@/views/User/MineView.vue";
+import DetailView from "@/views/User/DetailView.vue";
+import SelectView from "@/views/User/SelectView.vue";
+import AccountView from "@/views/Mine/AccountView.vue";
+import LikeView from "@/views/Mine/LikeView.vue";
+import MyaddressView from "@/views/Mine/MyaddressView.vue";
+import OrderView from "@/views/Mine/OrderView.vue";
+import SecureView from "@/views/Mine/SecureView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,6 +19,12 @@ const router = createRouter({
     {path:'/login', component: LoginView},
     {path:'/detail/:pid', component: DetailView},
     {path:'/select', component: SelectView},
+    {path:'/account', component: AccountView},
+    {path:'/order', component: OrderView},
+    {path:'/like', component: LikeView},
+    {path:'/myaddress', component: MyaddressView},
+    {path:'/secure', component: SecureView},
+      // 导航栏
     {
       // 默认路由 - 首页
       path: '/',
@@ -37,7 +48,7 @@ const router = createRouter({
         },
         {
           // 我的
-          path: '/mine',
+          path: '/Mine',
           component: MineView
         },
       ]

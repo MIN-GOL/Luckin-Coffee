@@ -20,7 +20,7 @@ export const useUserStore = defineStore(
 
         // const getUser = async () => {
         //     const res = await userGetInfoService() // 请求获取数据
-        //     user.value = res.data.data
+        //     User.value = res.data.data
         // }
 
         const setUer = (obj) => {

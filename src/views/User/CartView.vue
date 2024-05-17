@@ -12,7 +12,7 @@ const cart_list = ref([])
       left-arrow
       @click-left="onClickLeft"/>
 
-  <img src="../assets/shopbag_bg.png" width="100%" alt="">
+  <img src="../../assets/shopbag_bg.png" width="100%" alt="">
   <van-empty v-if="cart_list.length <= 0" description="购物袋没有商品" />
 
 </template>
@@ -22,4 +22,5 @@ const cart_list = ref([])
   --van-nav-bar-text-color: #0c34ba;
   --van-nav-bar-icon-color: #0c34ba;
 }
+
 </style>
