@@ -243,7 +243,7 @@ clickCount()
     line-height: .8rem;
     height: 2rem;
     background-color: #e8e8e8;
-    margin-right: .26667rem;
+    margin-right: .5rem;
     border-radius: 1rem;
   }
 }

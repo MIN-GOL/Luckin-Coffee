@@ -22,7 +22,7 @@ const onClickLeft = () => history.back();
 <style scoped lang="scss">
 .contain{
   background-color: #efefef;
-  height: 100vh;
+  height: 94.5vh;
   width: 100vw;
 
   .bg{
@@ -41,5 +41,8 @@ const onClickLeft = () => history.back();
     font-size: .9rem;
   }
 }
-
+.van-nav-bar {
+  --van-nav-bar-text-color: #0c34ba;
+  --van-nav-bar-icon-color: #0c34ba;
+}
 </style>
