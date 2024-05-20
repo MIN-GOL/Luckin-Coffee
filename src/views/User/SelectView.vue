@@ -12,6 +12,7 @@ const onCancel = () => value.value = '';
 const onClickLeft = () => history.back();
 const historyList = ref(JSON.parse(localStorage.getItem('historySearch')))
 
+
 console.log(historyList.value)
 // 搜索历史初始化
 if (historyList.value == null) {
@@ -26,10 +27,10 @@ const onSearch = (val) => {
       appkey: key
     }
   }).then(function (res) {
-    let resp = res.data.result
+    resp.value = res.data.result
 
     // 搜索成功
-    if (resp.length > 0) {
+    if (resp.value.length > 0) {
       showToast('搜索成功')
       let flag = 0
       let list = [{title: val}]
@@ -93,10 +94,23 @@ const clearStory = () => {
         <div>清除所有搜索历史</div>
       </div>
     </div>
-    <div v-if="resp.length > 0">
-      {{ resp }}
+
+    <div class="searched">
+      <ul class="products">
+        <li class="searchList" v-for="(i, index) in resp" v-bind:key="index">
+          <router-link class="item" :to="`/detail/${i.pid}`">
+            <img :src="i.smallImg" alt="">
+            <div class="iname">{{ i.name }}</div>
+            <div class="enname">{{ i.enname }}</div>
+            <div class="price">￥{{ i.price }}</div>
+          </router-link>
+        </li>
+      </ul>
     </div>
   </div>
+
+
+
 
 </template>
 
@@ -104,8 +118,8 @@ const clearStory = () => {
 
 .contain {
   background-color: #efefef;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 }
 
 .van-nav-bar {
@@ -135,5 +149,52 @@ const clearStory = () => {
   }
 }
 
+.searched{
+  .name{
+    color: #0c34ba;
+    font-size: .9rem;
+    margin-left: .6rem;
+    font-weight: 700
+  }
+  .products{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 10px 70px;
 
+    li{
+      width: 49%;
+    }
+    img{
+      width: 100%;
+    }
+    .enname{
+      font-size: 12px;
+      color: grey;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow:ellipsis;
+    }
+    .price{
+      font-size: 14px;
+      font-weight: bold;
+      color: #e4393c;
+      padding: 5px 0 10px 0;
+    }
+  }
+}
+
+.router-link-active {
+  text-decoration: none;
+  color: #000000;
+}
+
+a{
+  text-decoration: none;
+  color: #000000;
+}
+
+.searched .products li{
+  width: 45%;
+  padding: 1rem .5rem;
+}
 </style>

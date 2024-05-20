@@ -327,7 +327,7 @@ const clickLike = () => {
       }
     }
     .price {
-      color: #ee0a24;
+      color: #e4393c;
       font-weight: 700;
       position: absolute;
       right: 0;
@@ -380,7 +380,7 @@ const clickLike = () => {
 }
 
 ::v-deep(.van-stepper--round .van-stepper__plus ) {
-  background: #ee0a24;
+  background: #e4393c;
 }
 
 .detail-desc{

@@ -86,7 +86,7 @@ axios.get(`${base_url}/typeProducts`, {
           <img :src="i.smallImg" alt="">
           <div class="iname">{{ i.name }}</div>
           <div class="enname">{{ i.enname }}</div>
-          <div class="price">{{ i.price }}</div>
+          <div class="price">￥{{ i.price }}</div>
         </router-link>
       </li>
     </ul>
@@ -123,7 +123,7 @@ axios.get(`${base_url}/typeProducts`, {
   .price {
     font-size: 14px;
     font-weight: bold;
-    color: red;
+    color: #e4393c;
     padding: 5px 0 10px 0;
   }
 }
