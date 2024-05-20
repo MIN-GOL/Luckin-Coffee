@@ -24,9 +24,9 @@ const icon = {
 
 
 // 获取页面内容
-axios.get('http://www.kangliuyong.com:10002/productDetail', {
+axios.get(`${base_url}/productDetail`, {
   params: {
-    appkey: "U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA=",
+    appkey: key,
     pid: coffee_pid.value
   }
 }).then(function (res) {
@@ -364,8 +364,6 @@ const clickLike = () => {
   }
 }
 
-
-
 .select-count-box{
   display: flex;
   font-size: 14px;
@@ -381,6 +379,12 @@ const clickLike = () => {
 
 ::v-deep(.van-stepper--round .van-stepper__plus ) {
   background: #e4393c;
+}
+
+::v-deep(.van-stepper--round .van-stepper__minus) {
+  color: #ff001d;
+  background-color: #FFF;
+  border: .02667rem solid #ff001d;
 }
 
 .detail-desc{
