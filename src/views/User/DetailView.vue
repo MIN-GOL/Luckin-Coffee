@@ -260,28 +260,24 @@ const clickLike = () => {
     </div>
 
     <!-- 底部导航栏 -->
-    <van-tabbar route>
-      <van-tabbar-item
-          icon="../src/assets/cart.png"
+    <van-action-bar>
+      <van-action-bar-icon
+          to="/cart"
           :badge=cart_count
-          to="/cart">
-        购物袋
-      </van-tabbar-item>
-      <van-tabbar-item @click="clickLike">
-        <span v-if="like">已收藏</span>
-        <span v-else>收藏</span>
-        <template #icon>
-          <img :src="like ? icon.active : icon.inactive" alt=""/>
-        </template>
-      </van-tabbar-item>
-      <div class="container">
-        <van-button
-            type="primary"
-            size="normal"
-            @click="toCart"
-            round>加入购物袋</van-button>
-      </div>
-    </van-tabbar>
+          icon="https://img2.imgtp.com/2024/05/20/jDXX0Fy1.png"
+          text="购物袋" />
+      <van-action-bar-icon
+          v-if="like"
+          @click="clickLike"
+          icon="https://img2.imgtp.com/2024/05/20/v4sW6kPP.png"
+          text="已收藏"/>
+      <van-action-bar-icon
+          v-else
+          @click="clickLike"
+          icon="https://img2.imgtp.com/2024/05/20/Ku3WtItX.png"
+          text="收藏"/>
+      <van-action-bar-button class="toCart" text="加入购物袋" @click="toCart"/>
+    </van-action-bar>
 
   </div>
 </template>
@@ -298,9 +294,11 @@ const clickLike = () => {
   --van-nav-bar-icon-color: #0c34ba;
 }
 
-.van-button {
+.toCart {
   background-color: #0c34ba;
   border-color: #0c34ba;
+  color: #FFF;
+  font-weight: normal;
 }
 
 .detail-info {
