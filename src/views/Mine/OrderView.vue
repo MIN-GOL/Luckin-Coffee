@@ -2,6 +2,7 @@
 import axios from 'axios'
 import {ref} from 'vue'
 import MineInfo from "@/components/MineInfo.vue";
+import qs from "qs";
 
 const orders = ref([])
 const active = ref(0);
@@ -24,7 +25,7 @@ const selectOrder = ({name}) => {
 }
 
 // 确认收获and删除
-const click_op = (status) => {
+const click_op = (status, oid) => {
   let title_op = ''
   if (status === 1) {
     title_op = '确定收货'
@@ -35,7 +36,32 @@ const click_op = (status) => {
         '是否确认要' + title_op,
   })
       .then(() => {
+        const data = {
+          'appkey': key,
+          'tokenString': token,
+          'oid': oid
+        }
+        // 确认订单
+        if (status === 1) {
+          const post_method = {
+            method: 'POST',
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            data: qs.stringify(data),
+            url: `${base_url}/receive`,
+          };
+          axios(post_method)
+        }else {
+          const post_method = {
+            method: 'POST',
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            data: qs.stringify(data),
+            url: `${base_url}/removeOrder`,
+          };
+          axios(post_method)
+        }
+
         // on confirm
+        console.log(oid)
       })
       .catch(() => {
         // on cancel
@@ -72,12 +98,14 @@ selectOrder({name: 0})
             </div>
             <div class="order-op">
               <div v-if="item.status === 1"
-                   @click="click_op(item.status)">
+                   @click="click_op(item.status, item.oid)">
                 确认收货
               </div>
               <div v-if="item.status === 2">
                 已完成
-                <van-icon name="delete-o" @click="click_op(item.status)"/>
+                <van-icon
+                    name="delete-o"
+                    @click="click_op(item.status, item.oid)"/>
               </div>
             </div>
           </div>

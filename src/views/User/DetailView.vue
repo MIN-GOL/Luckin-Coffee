@@ -2,6 +2,8 @@
 import {ref} from 'vue'
 import {useRoute} from "vue-router";
 import axios from "axios";
+import qs from "qs";
+import {showToast} from "vant";
 
 const like = ref(false);
 const onClickLeft = () => history.back();
@@ -9,19 +11,19 @@ const count = ref(1);
 const route = useRoute()
 const coffee_pid = ref(route.params.pid)
 const coffee_info = ref([])
-const detail = ref([])
+const detail = ref({'tem': 0, 'milk': 0, 'sugar':0, 'cream':0})
+const cart_count = ref()
+const base_url = 'http://www.kangliuyong.com:10002'
+const token = localStorage.getItem('token');
+const key = 'U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA='
 
 const icon = {
   active: '../src/assets/collected.png',
   inactive: '../src/assets/collect.png',
 };
 
-const clickLike = () => {
-  like.value = !like.value
-}
 
-
-// 获取标签页
+// 获取页面内容
 axios.get('http://www.kangliuyong.com:10002/productDetail', {
   params: {
     appkey: "U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA=",
@@ -29,18 +31,122 @@ axios.get('http://www.kangliuyong.com:10002/productDetail', {
   }
 }).then(function (res) {
   coffee_info.value = res.data.result[0]
+  // rule预处理
+  for (let i in detail.value){
+    if(coffee_info.value[i].length <= 0) {
+      delete detail.value[i]
+    }
+  }
 })
 
-// test
-const clickCount = () =>{
-  console.log(`您当前一共点了${count.value}杯咖啡` )
+// 获取购物车数量
+axios.get(`${base_url}/shopcartCount`,{
+  params:{
+    appkey: key,
+    tokenString: token
+  }
+}).then(function (res){
+  res = res.data
+  if(res.code === 4000){
+    cart_count.value = res.result
+  }
+})
+
+// 获取收藏状态
+axios.get(`${base_url}/findlike`,{
+  params:{
+    appkey: key,
+    tokenString: token,
+    pid: coffee_pid.value
+  }
+}).then(function (res) {
+  res = res.data.result
+  if (res.length <= 0) {
+    like.value = false
+  }else {
+    if (res[0].pid === coffee_pid.value){
+      like.value = true
+    }
+  }
+})
+
+
+// 加入购物车
+const toCart = () => {
+  let rule = ''
+  for (let i in detail.value){
+    const ruleList = coffee_info.value[i].split('/')
+    rule += ruleList[detail.value[i]]+'/'
+  }
+  rule = rule.slice(0, -1)
+  const data = {
+    'appkey': key,
+    'tokenString': token,
+    'pid': coffee_info.value.pid,
+    'count': count.value,
+    'rule': rule
+  }
+  const post_method = {
+    method: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    data: qs.stringify(data),
+    url: `${base_url}/addShopcart`,
+  }
+  axios(post_method).then(function (res) {
+    res = res.data
+    // 成功响应
+    if (res.code === 3000) {
+      cart_count.value += count.value
+      showToast('加入购物车成功')
+    }
+    if (res.code === 3001) {
+      showToast('加入失败，请重试')
+    }
+  }).catch(function (err){
+    showFailToast(err)
+  })
 }
 
-const choose = (item) => {
-  console.log(item)
+// 口味选择
+const choose = (index, cate) => {
+  if (detail.value !== index) {
+    detail.value[cate] = index
+  }
 }
 
-clickCount()
+// 收藏
+const clickLike = () => {
+  let second = ''
+  if (like === true){
+    second = 'notlike'
+  }else {
+    second = 'like'
+  }
+  console.log(second)
+  const data = {
+    appkey: key,
+    tokenString: token,
+    pid: coffee_pid.value
+  }
+  const post_method = {
+    method: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    data: qs.stringify(data),
+    url: `${base_url}/${second}`,
+  }
+  axios(post_method).then(function (res) {
+    res = res.data
+    // 成功响应
+    if (res.code === 900) {
+      showToast('已取消收藏')
+      like.value = !like.value
+    }
+    if (res.code === 800) {
+      showToast('已收藏')
+      like.value = !like.value
+    }
+  })
+}
 
 </script>
 
@@ -78,8 +184,9 @@ clickCount()
             {{ coffee_info.tem_desc }}
           </div>
           <button
-              @click="choose(item, index)"
+              @click="choose(index, 'tem')"
               v-for="(item, index) in coffee_info.tem.split('/')"
+              :class="detail.tem===index?'active':''"
               :key="index">
             {{ item }}
           </button>
@@ -90,8 +197,9 @@ clickCount()
             {{ coffee_info.milk_desc }}
           </div>
           <button
-              @click="choose(item)"
+              @click="choose(index, 'milk')"
               v-for="(item, index) in coffee_info.milk.split('/')"
+              :class="detail.milk===index?'active':''"
               :key="index">
             {{ item }}
           </button>
@@ -102,8 +210,9 @@ clickCount()
             {{ coffee_info.sugar_desc }}
           </div>
           <button
-              @click="choose(item)"
+              @click="choose(index, 'sugar')"
               v-for="(item, index) in coffee_info.sugar.split('/')"
+              :class="detail.sugar===index?'active':''"
               :key="index">
             {{ item }}
           </button>
@@ -114,9 +223,9 @@ clickCount()
             {{ coffee_info.cream_desc }}
           </div>
           <button
-              :class="[active===true]"
-              @click="choose(item,index)"
+              @click="choose(index, 'cream')"
               v-for="(item, index) in coffee_info.cream.split('/')"
+              :class="detail.cream===index?'active':''"
               :key="index">
             {{ item }}
           </button>
@@ -128,7 +237,6 @@ clickCount()
       <div class="select-count-box">
           <div>选择数量</div>
           <van-stepper
-              @click="clickCount"
               v-model="count"
               theme="round"
               button-size="22"
@@ -153,7 +261,12 @@ clickCount()
 
     <!-- 底部导航栏 -->
     <van-tabbar route>
-      <van-tabbar-item icon="../src/assets/cart.png" to="/cart">购物袋</van-tabbar-item>
+      <van-tabbar-item
+          icon="../src/assets/cart.png"
+          :badge=cart_count
+          to="/cart">
+        购物袋
+      </van-tabbar-item>
       <van-tabbar-item @click="clickLike">
         <span v-if="like">已收藏</span>
         <span v-else>收藏</span>
@@ -162,7 +275,11 @@ clickCount()
         </template>
       </van-tabbar-item>
       <div class="container">
-        <van-button type="primary" to="/login" size="normal" round>加入购物袋</van-button>
+        <van-button
+            type="primary"
+            size="normal"
+            @click="toCart"
+            round>加入购物袋</van-button>
       </div>
     </van-tabbar>
 
@@ -231,6 +348,7 @@ clickCount()
       width: 3rem;
     }
   }
+
   .active{
     background-color: #3762f0;
     color: #fff;
@@ -247,6 +365,8 @@ clickCount()
     border-radius: 1rem;
   }
 }
+
+
 
 .select-count-box{
   display: flex;
