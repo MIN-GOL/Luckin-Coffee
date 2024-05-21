@@ -46,14 +46,35 @@ const onSubmit = () => {
           v-for="(item, index) in cart_list"
           :key="index"
           class="cell">
-        <van-card
-            :num=item.count
-            :price=item.price
-            :desc=item.enname
-            :title=item.name
-            class="goods-card"
-            :thumb=item.small_img
-        />
+        <div class="shopbag-item">
+          <div class="check-box">
+            <van-checkbox></van-checkbox>
+          </div>
+          <div class="shopbag-item-img">
+            <img :src="item.small_img" alt="">
+          </div>
+          <div class="shopbag-item-content">
+            <div class="shopbag-name">
+              <div class="zhname-box">
+                <div class="zhname">{{ item.name }}</div>
+                <div class="rule">{{ item.rule }}</div>
+              </div>
+              <div class="enname">{{ item.enname }}</div>
+
+            </div>
+            <div class="price-count">
+              <div class="price">￥{{item.price}}</div>
+              <div class="count">
+                <van-stepper
+                    class="step"
+                    v-model="item.count"
+                    theme="round"
+                    button-size="22"
+                    disable-input />
+              </div>
+            </div>
+          </div>
+        </div>
         <template #right>
           <van-button square text="删除" type="danger" class="delete-button" />
         </template>
@@ -79,22 +100,82 @@ const onSubmit = () => {
   background-color: #efefef;
   width: 100vw;
   height: 100vh;
+
+  .cell{
+    margin: .8rem;
+    background-color: #fff;
+    border-radius: .7rem;
+  }
 }
 
-.cell{
-  margin: .8rem;
-  background-color: #fff;
-  border-radius: .7rem;
+.shopbag-item{
+  display: flex;
+  padding: .26667rem;
+  align-items: center;
 
+  .check-box{
+    padding-left: .5rem;
+    flex: none;
+    width: 2rem;
+    height: 1em;
+    font-size: var(--van-checkbox-size);
+    line-height: 1em;
+  }
+
+  .shopbag-item-img{
+    margin: .5rem;
+    img{
+      margin-left: -.5rem;
+      width: 5.5rem;
+    }
+  }
+
+  .shopbag-item-content{
+    .shopbag-name{
+      .zhname-box{
+        display: flex;
+        font-size: .9rem;
+        color: #666;
+        .zhname{
+          margin-right: 1rem;
+        }
+
+      }
+
+      .enname{
+        font-size: .8rem;
+        color: #999;
+      }
+    }
+
+    .price-count{
+      display: flex;
+      margin-top: 2rem;
+      .price{
+        font-size: .9rem;
+      }
+
+      .step{
+        position: absolute;
+        right: 0;
+        margin-right: 1rem;
+      }
+    }
+
+  }
 }
 
 .van-submit-bar{
   margin-bottom: 3rem;
 }
 
-
 .delete-button {
   height: 100%;
+}
+
+.price {
+  color: #e4393c;
+  font-weight: 700;
 }
 
 ::v-deep(.van-card__price) {
