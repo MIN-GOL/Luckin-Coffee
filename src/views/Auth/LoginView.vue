@@ -66,9 +66,8 @@ const onSubmitLogin = (values) => {
         router.push('/home')
       },2500)
 
-    }
-    if(res.code === 202){
-      showFailToast(res.msg);
+    } else {
+      showFailToast(res.msg)
     }
   })
     .catch(function (err) {
@@ -82,7 +81,7 @@ const onSubmitRegister = (values) => {
     'appkey': 'U2FsdGVkX19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA=',
     'phone' : `${values.regphone}`,
     'password': `${values.regpassword}`,
-    'nickname': `${values.nickname}`
+    'nickName': `${values.nickname}`
   };
   const options = {
     method: 'POST',

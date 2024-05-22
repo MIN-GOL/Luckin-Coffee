@@ -15,6 +15,10 @@ const onClickLeft = () => history.back();
     <div class="card">
       <slot></slot>
     </div>
+    <div class="logout">
+      <slot name="logout"></slot>
+    </div>
+
   </div>
 
 </template>
@@ -44,5 +48,9 @@ const onClickLeft = () => history.back();
 .van-nav-bar {
   --van-nav-bar-text-color: #0c34ba;
   --van-nav-bar-icon-color: #0c34ba;
+}
+
+.logout {
+  margin: 5rem 1rem 1rem;
 }
 </style>

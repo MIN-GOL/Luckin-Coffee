@@ -12,8 +12,10 @@ import LikeView from "@/views/Mine/LikeView.vue";
 import MyaddressView from "@/views/Mine/MyaddressView.vue";
 import OrderView from "@/views/Mine/OrderView.vue";
 import SecureView from "@/views/Mine/SecureView.vue";
+import EditAddressView from "@/views/Mine/EditAddressView.vue";
 
 const router = createRouter({
+  mode: 'history',
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {path:'/login', component: LoginView},
@@ -24,6 +26,7 @@ const router = createRouter({
     {path:'/like', component: LikeView},
     {path:'/myaddress', component: MyaddressView},
     {path:'/secure', component: SecureView},
+    {path:'/address/:aid', component: EditAddressView},
       // 导航栏
     {
       // 默认路由 - 首页
