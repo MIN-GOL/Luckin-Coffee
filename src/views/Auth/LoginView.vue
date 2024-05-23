@@ -5,6 +5,7 @@ import {ref} from 'vue'
 import axios from "axios";
 import qs from 'qs';
 
+
 const useUserStore = defineStore(
     'luckin-coffee',
     () => {
@@ -19,6 +20,7 @@ const useUserStore = defineStore(
     }
 )
 
+const showPassword = ref(false);
 const show = ref(false)
 const isLogin = ref(true)
 const from = ref()
@@ -116,6 +118,11 @@ const forget = () => {
   formModel.value.password = ''
 }
 
+// 显示/隐藏密码
+const togglePassword = () => {
+  showPassword.value = !showPassword.value;
+};
+
 </script>
 
 <template>
@@ -154,7 +161,7 @@ const forget = () => {
         />
         <van-field
             v-model="formModel.password"
-            type="password"
+            :type="showPassword ? 'text' : 'password'"
             name="password"
             label="密码"
             placeholder="密码(6-16位)"
@@ -163,7 +170,11 @@ const forget = () => {
                 { pattern: /^[a-zA-Z][a-zA-Z0-9_]{4,14}$/, message: '密码支持数字字母下划线组合，目必须以\n'+
                   '字母开头，6-16位'}
             ]"
-        />
+        >
+          <template #button>
+            <van-icon name="eye-o" @click="togglePassword" />
+          </template>
+        </van-field>
         <div class="forget" @click="forget">忘记密码？</div>
       </van-cell-group>
       <div style="margin: 16px">
@@ -208,7 +219,7 @@ const forget = () => {
              />
              <van-field
                  v-model="formModel.regpassword"
-                 type="password"
+                 :type="showPassword ? 'text' : 'password'"
                  name="regpassword"
                  label="密码"
                  placeholder="密码(6-16位)"
@@ -217,7 +228,11 @@ const forget = () => {
                      { pattern: /^[a-zA-Z][a-zA-Z0-9_]{4,14}$/, message: '密码支持数字字母下划线组合，目必须以\n'+
                   '字母开头，6-16位'}
                  ]"
-             />
+             >
+               <template #button>
+                 <van-icon name="eye-o" @click="togglePassword" />
+               </template>
+             </van-field>
              <van-field
                  v-model="formModel.nickname"
                  name="nickname"
@@ -265,7 +280,7 @@ const forget = () => {
         />
         <van-field
             v-model="formModel.password"
-            type="password"
+            :type="showPassword ? 'text' : 'password'"
             name="新密码"
             label="新密码"
             placeholder="新密码(6-16位)"
@@ -274,7 +289,11 @@ const forget = () => {
                 { pattern: /^[a-zA-Z][a-zA-Z0-9_]{4,14}$/, message: '密码支持数字字母下划线组合，目必须以\n'+
                   '字母开头，6-16位'}
             ]"
-        />
+        >
+          <template #button>
+            <van-icon name="eye-o" @click="togglePassword" />
+          </template>
+        </van-field>
         <van-field
             v-model="formModel.email"
             type="email"

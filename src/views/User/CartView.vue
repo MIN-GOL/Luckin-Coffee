@@ -1,35 +1,92 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import axios from "axios";
-import {showToast, Toast} from "vant";
+import {showToast} from "vant";
+import qs from "qs";
 
 const onClickLeft = () => history.back();
 const cart_list = ref([])
-const checked = ref()
+
 const base_url = 'http://www.kangliuyong.com:10002'
 const token = localStorage.getItem('token');
 const key = 'U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA='
 
 // 获取购物车列表
-axios.get(`${base_url}/findAllShopcart`, {
-  params: {
+const getShopCart = () => {
+  axios.get(`${base_url}/findAllShopcart`, {
+    params: {
+      appkey: key,
+      tokenString: token
+    }
+  }).then(function (res) {
+    res = res.data
+    if (res.code === 5000) {
+      cart_list.value = res.result
+    }
+  }).catch(function (err) {
+    showToast(err)
+  })
+}
+
+// 进入页面的时候获取购物车列表
+getShopCart()
+
+// 删除
+const deleteShopCart = (sid) => {
+  let list = []
+  for (let i of sid){
+    list.push(i)
+  }
+  list = JSON.stringify(list)
+  axios.post(`${base_url}/deleteShopcart`, qs.stringify({
     appkey: key,
-    tokenString: token
-  }
-}).then(function (res) {
-  res = res.data
-  if(res.code === 5000){
-    cart_list.value = res.result
-    console.log(res)
-  }
-}).catch(function (err){
-  showToast(err)
-})
+    tokenString: token,
+    sids: list
+  })).then(function (res){
+    res = res.data
+    if(res.code === 7000){
+      showToast('删除成功')
+      cart_list.value = cart_list.value.filter(item => !sid.includes(item.sid))
+    }
+  }).catch(function (err){
+    showToast(err)
+  })
+}
 
 
 const onSubmit = () => {
   showToast('点击了')
 }
+
+// total是所有选中的商品的总价
+const total = computed(() => {
+  let total = 0
+  cart_list.value.forEach(item => {
+    if (item.checked) {
+      total += item.price * item.count
+    }
+  })
+  return total
+})
+
+// 点击进步器进行商品增减
+const onChange = (index, value) => {
+  cart_list.value[index].count = value
+  axios.post(`${base_url}/modifyShopcartCount`, qs.stringify({
+    appkey: key,
+    tokenString: token,
+    sid: cart_list.value[index].sid,
+    count: value
+  })).then(function (res){
+    res = res.data
+    if(res.code === 6000){
+      showToast('修改成功')
+    }
+  }).catch(function (err){
+    showToast(err)
+  })
+}
+
 </script>
 
 <template>
@@ -48,7 +105,7 @@ const onSubmit = () => {
           class="cell">
         <div class="shopbag-item">
           <div class="check-box">
-            <van-checkbox></van-checkbox>
+              <van-checkbox></van-checkbox>
           </div>
           <div class="shopbag-item-img">
             <img :src="item.small_img" alt="">
@@ -69,6 +126,7 @@ const onSubmit = () => {
                     class="step"
                     v-model="item.count"
                     theme="round"
+                    @change="onChange(index, $event)"
                     button-size="22"
                     disable-input />
               </div>
@@ -76,13 +134,18 @@ const onSubmit = () => {
           </div>
         </div>
         <template #right>
-          <van-button square text="删除" type="danger" class="delete-button" />
+          <van-button
+              square
+              text="删除"
+              type="danger"
+              @click="deleteShopCart([item.sid])"
+              class="delete-button" />
         </template>
       </van-swipe-cell>
     </div>
     <div>
-      <van-submit-bar :price="3050" button-text="提交订单" @submit="onSubmit">
-        <van-checkbox v-model="checked">全选</van-checkbox>
+      <van-submit-bar :price="total" button-text="提交订单" @submit="onSubmit">
+        <van-checkbox>全选</van-checkbox>
       </van-submit-bar>
     </div>
   </div>

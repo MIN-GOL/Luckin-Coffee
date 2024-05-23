@@ -355,7 +355,7 @@ const clickLike = () => {
   button{
     border: 0;
     text-align: center;
-    width: 4.5rem;
+    width: 5rem;
     line-height: .8rem;
     height: 2rem;
     background-color: #e8e8e8;
