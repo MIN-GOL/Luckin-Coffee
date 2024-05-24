@@ -154,6 +154,7 @@ const clickLike = () => {
   <div class="contain">
     <!-- 顶部导航 -->
     <van-nav-bar
+        fixed
         title="商品详情"
         left-text="返回"
         left-arrow
@@ -389,6 +390,7 @@ const clickLike = () => {
 
 .detail-desc{
   margin-top: 2rem;
+  margin-bottom: 5rem;
 
   .tag{
     color: #232323;

@@ -5,6 +5,7 @@ const onClickLeft = () => history.back();
 
 <template>
   <van-nav-bar
+      fixed
       :title="title"
       left-text='返回'
       left-arrow

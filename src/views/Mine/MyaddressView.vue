@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import router from "@/router/index.js";
 
 const onClickLeft = () => history.back();
-const addressList = ref()
+const addressList = ref([])
 const chosenAddressId = ref('1');
 
 const base_url = 'http://www.kangliuyong.com:10002'
@@ -21,14 +21,13 @@ axios.get(`${base_url}/findAddress`,{
   res = res.data
   if (res.code === 20000) {
     addressList.value = res.result
+    addressList.value.forEach(item => {
+      item.address = item.province + item.city + item.county + item.addressDetail
+    })
   }
 })
 
-console.log(addressList)
-
-
 const onEdit = (item) => {
-  showToast(item.aid)
   router.push(`/address/${item.aid}`)
 
 };
@@ -38,6 +37,7 @@ const onAdd = () => showToast('新增地址')
 
 <template>
   <van-nav-bar
+      fixed
       title="地址管理"
       left-text="返回"
       left-arrow
@@ -72,6 +72,7 @@ const onAdd = () => showToast('新增地址')
 }
 
 .contains{
+  margin-top: 3rem;
   background-color: #efefef;
   width: 100vw;
   height: 100vh;

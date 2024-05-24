@@ -5,10 +5,14 @@ import { ref } from 'vue'
 import {useRoute} from "vue-router";
 import { areaList } from '@vant/area-data';
 import {showToast} from "vant";
+import qs from "qs";
+
 
 
 const onClickLeft = () => history.back();
 const addressList = ref([])
+const addressList_default = ref([])
+const searchResult = ref([]);
 const route = useRoute()
 const aid = route.params.aid
 
@@ -16,11 +20,6 @@ const base_url = 'http://www.kangliuyong.com:10002'
 const token = localStorage.getItem('token');
 const key = 'U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA='
 
-const searchResult = ref([]);
-
-const onSave = () => showToast('save');
-const onDelete = () => showToast('delete');
-const onChangeDetail = () => showToast('123')
 
 axios.get(`${base_url}/findAddressByAid`,{
   params:{
@@ -32,9 +31,52 @@ axios.get(`${base_url}/findAddressByAid`,{
   res = res.data
   if (res.code === 40000) {
     addressList.value = res.result[0]
+    addressList.value.isDefault = addressList.value.isDefault === 1
+    addressList_default.value = addressList.value
   }
 })
 
+const editAddress = (e) => {
+  e.isDefault = e.isDefault ? 1 : 0
+  const data = {
+    aid: aid,
+    appkey: key,
+    tokenString: token,
+    ...e
+  }
+  const post_method = {
+    method: 'POST',
+    url: `${base_url}/editAddress`,
+    data: qs.stringify(data),
+    headers: {'content-type': 'application/x-www-form-urlencoded'}
+  }
+  axios(post_method).then(function (res){
+    res = res.data
+    if(res.code === 30000){
+      showToast('修改成功')
+      setTimeout(() => {
+        history.back()
+      }, 1000)
+    }
+    if(res.code === 30001){
+      showToast('修改失败')
+    }
+  }).catch(function (err) {
+    console.log(err)
+  })
+}
+
+const onSave = (e) => {
+  delete e.country
+  for (let key in e){
+    console.log(e[key], addressList_default.value[key])
+    if(e[key] !== addressList_default.value[key]){
+      editAddress(e)
+      return
+    }
+  }showToast('尚未修改地址')
+}
+const onDelete = () => showToast('delete');
 
 </script>
 
@@ -56,11 +98,10 @@ axios.get(`${base_url}/findAddressByAid`,{
         :area-columns-placeholder="['请选择', '请选择', '请选择']"
         @save="onSave"
         @delete="onDelete"
-        @change-detail="onChangeDetail"
     >
       <template #default>
         <van-field
-            :v-model="addressList.postalCode"
+            v-model="addressList.postalCode"
             label="邮政编码"/>
       </template>
     </van-address-edit>
@@ -82,5 +123,9 @@ axios.get(`${base_url}/findAddressByAid`,{
 ::v-deep(.van-button--primary){
   background: #0c34ba;
   border: 0;
+}
+
+::v-deep(.van-switch--on){
+  background: #0c34ba;
 }
 </style>

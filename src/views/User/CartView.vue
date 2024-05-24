@@ -202,7 +202,11 @@ const onChange = (index, value) => {
         .zhname{
           margin-right: 1rem;
         }
-
+        .rule{
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
 
       .enname{

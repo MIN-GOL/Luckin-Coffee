@@ -12,7 +12,7 @@ import legacy from '@vitejs/plugin-legacy';
 export default defineConfig({
   plugins: [
     vue(),
-    VueDevTools(),
+    // VueDevTools(),
     legacy({
       targets: ['ie>=11'],
       additionalLegacyPolyfills: ['regenerator-runtime/runtime']

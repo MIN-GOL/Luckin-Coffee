@@ -50,6 +50,7 @@ const click_op = (status, oid) => {
             url: `${base_url}/receive`,
           };
           axios(post_method)
+          orders.value = orders.value.filter(item => item.oid !== oid)
         }else {
           const post_method = {
             method: 'POST',
@@ -58,6 +59,7 @@ const click_op = (status, oid) => {
             url: `${base_url}/removeOrder`,
           };
           axios(post_method)
+          orders.value = orders.value.filter(item => item.oid !== oid)
         }
 
         // on confirm
@@ -81,7 +83,7 @@ selectOrder({name: 0})
         title-active-color="#0c34ba"
         line-height="2px"
         color="#0c34ba"
-        @click-tab="selectOrder">
+        @change="selectOrder">
       <van-tab
           v-for="(item, index) in ['全部', '进行中', '已完成']"
           :title="item"

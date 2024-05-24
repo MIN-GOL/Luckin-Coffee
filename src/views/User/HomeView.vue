@@ -56,7 +56,7 @@ let getTimeState = () => {
 </script>
 
 <template>
-  <van-nav-bar>
+  <van-nav-bar fixed>
     <template #left>
       <div>
         {{getTimeState()}}
