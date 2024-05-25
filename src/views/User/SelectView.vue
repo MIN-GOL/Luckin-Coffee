@@ -2,6 +2,7 @@
 
 import {ref} from "vue";
 import axios from "axios";
+import {showToast} from "vant";
 
 const value = ref('');
 const resp = ref([])
@@ -14,6 +15,7 @@ const historyList = ref(JSON.parse(localStorage.getItem('historySearch')))
 
 
 console.log(historyList.value)
+
 // 搜索历史初始化
 if (historyList.value == null) {
   localStorage.setItem('historySearch', JSON.stringify([]))
@@ -59,7 +61,16 @@ const onSearch = (val) => {
 const clearStory = () => {
   historyList.value = ''
   localStorage.setItem('historySearch', JSON.stringify([]))
+
 }
+
+// 删除搜索记录
+const delHistory = (title) => {
+  let index = historyList.value.findIndex(item => item.title === title)
+  historyList.value.splice(index, 1)
+  localStorage.setItem('historySearch', JSON.stringify(historyList.value))
+}
+
 </script>
 
 <template>
@@ -84,11 +95,15 @@ const clearStory = () => {
     </van-nav-bar>
 
     <div class="search-history" v-if="historyList.length > 0">
-      <div
-          class="history-item"
-          v-for="{item, index} in historyList"
-          :key="index">
-        {{ item }}
+      <div style="display: flex">
+        <div v-for="(item, index) in historyList"
+             :key="index"
+             class="history-item">
+          <div class="title" @click="onSearch(item.title)">
+            {{ item.title }}
+          </div>
+          <div class="del" @click="delHistory(item.title)">×</div>
+        </div>
       </div>
       <div class="search-btn" @click="clearStory">
         <div>清除所有搜索历史</div>
@@ -133,8 +148,20 @@ const clearStory = () => {
   background-color: #FFF;
 
   .history-item{
-    background: #FFF;
-    width: 100vw;
+    display: flex;
+    padding: .2rem;
+    background-color: #e8e8e8;
+    font-size: .8rem;
+    margin: .3rem;
+    align-items: center;
+
+    .title{
+      margin-right: .3rem;
+    }
+
+    .del{
+      font-size: 1rem;
+    }
   }
 
   .search-btn{

@@ -32,7 +32,9 @@ const onEdit = (item) => {
 
 };
 
-const onAdd = () => showToast('新增地址')
+const onAdd = () => {
+  router.push('/address')
+}
 </script>
 
 <template>

@@ -13,6 +13,7 @@ import MyaddressView from "@/views/Mine/MyaddressView.vue";
 import OrderView from "@/views/Mine/OrderView.vue";
 import SecureView from "@/views/Mine/SecureView.vue";
 import EditAddressView from "@/views/Mine/EditAddressView.vue";
+import AddAddressView from "@/views/Mine/AddAddressView.vue";
 
 const router = createRouter({
   mode: 'history',
@@ -27,6 +28,7 @@ const router = createRouter({
     {path:'/myaddress', component: MyaddressView},
     {path:'/secure', component: SecureView},
     {path:'/address/:aid', component: EditAddressView},
+    {path:'/address', component: AddAddressView},
       // 导航栏
     {
       // 默认路由 - 首页

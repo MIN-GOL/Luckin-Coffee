@@ -12,10 +12,10 @@ const token = localStorage.getItem('token');
 const key = 'U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA='
 
 // 订单查询
-const selectOrder = ({name}) => {
+const selectOrder = () => {
   axios.get(`${base_url}/findOrder`, {
     params: {
-      status: name,
+      status: active.value,
       appkey: key,
       tokenString: token
     }

@@ -66,6 +66,32 @@ const editAddress = (e) => {
   })
 }
 
+// 删除地址
+const deleteAddress = () => {
+  const data = {
+    aid: addressList.value.aid,
+    appkey: key,
+    tokenString: token
+  }
+  const post_method = {
+    method: 'POST',
+    url: `${base_url}/deleteAddress`,
+    data: qs.stringify(data),
+    headers: {'content-type': 'application/x-www-form-urlencoded'}
+  }
+  axios(post_method).then(function (res){
+    res = res.data
+    if(res.code === 10000){
+      showToast('删除成功')
+      setTimeout(() => {
+        history.back()
+      }, 1000)
+    }
+  }).catch(function (err) {
+    console.log(err)
+  })
+}
+
 const onSave = (e) => {
   delete e.country
   for (let key in e){
@@ -76,7 +102,6 @@ const onSave = (e) => {
     }
   }showToast('尚未修改地址')
 }
-const onDelete = () => showToast('delete');
 
 </script>
 
@@ -97,11 +122,12 @@ const onDelete = () => showToast('delete');
         :search-result="searchResult"
         :area-columns-placeholder="['请选择', '请选择', '请选择']"
         @save="onSave"
-        @delete="onDelete"
+        @delete="deleteAddress"
     >
       <template #default>
         <van-field
             v-model="addressList.postalCode"
+            placeholder="邮政编码"
             label="邮政编码"/>
       </template>
     </van-address-edit>

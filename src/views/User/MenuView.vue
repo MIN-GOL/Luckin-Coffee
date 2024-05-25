@@ -103,6 +103,7 @@ axios.get(`${base_url}/typeProducts`, {
   display: flex;
   flex-wrap: wrap;
   margin: 0 10px 10px 10px;
+  padding-bottom: 3rem;
 
   li {
     width: 49%;
