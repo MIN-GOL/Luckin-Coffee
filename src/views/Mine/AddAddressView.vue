@@ -1,24 +1,17 @@
 <script setup>
 import { ref } from 'vue'
 import { areaList } from '@vant/area-data';
+import {showToast} from "vant";
 
-const addressList = ref({
-  name: '',
-  tel: '',
-  province: '',
-  city: '',
-  county: '',
-  addressDetail: '',
-  areaCode: '',
-  postalCode: '',
-  isDefault: false
-});
+const addressList = ref([])
 
-const searchResult = ref([]);
+const onChangeDetail = (val) => {
+  showToast(val)
+}
 
 const onClickLeft = () => history.back();
-const onSave = (addressInfo) => {
-  console.log(e)
+const onSave = () => {
+  console.log(addressList.value)
 }
 
 
@@ -33,11 +26,11 @@ const onSave = (addressInfo) => {
   />
   <div class="contain">
     <van-address-edit
-        v-model="addressList"
+        :address-info="addressList"
         :area-list="areaList"
         show-set-default
-        :search-result="searchResult"
         :area-columns-placeholder="['请选择', '请选择', '请选择']"
+        @change-detail="onChangeDetail"
         @save="onSave"
     >
       <template #default>

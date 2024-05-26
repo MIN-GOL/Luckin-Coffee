@@ -290,6 +290,10 @@ const clickLike = () => {
   height: 100vh;
 }
 
+.detail-img{
+  margin-top: 2rem;
+}
+
 .van-nav-bar {
   --van-nav-bar-text-color: #0c34ba;
   --van-nav-bar-icon-color: #0c34ba;

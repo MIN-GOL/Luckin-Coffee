@@ -364,7 +364,7 @@ const togglePassword = () => {
 }
 
 .register {
-  margin: .6rem 2.0rem;
+  margin: 1rem 2rem;
   font-size: 1.6rem;
   color: #3e3e3e;
 }
