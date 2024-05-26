@@ -1,16 +1,17 @@
 import { defineStore } from 'pinia'
-
 import { ref } from 'vue'
-import {showToast} from "vant";
+import { useChannelStore} from "@/stores/index.js";
 import router from "@/router/index.js";
 
 export const useUserStore = defineStore(
     'user',
     () => {
+        const channelStore = useChannelStore()
+
         const showPassword = ref(false);
         const show = ref(false)
         const isLogin = ref(true)
-        const token = localStorage.getItem('token');
+        const token = channelStore.token
 
         const formModel = ref({
             // 登录和忘记密码共用
