@@ -3,6 +3,9 @@ import { ref, computed } from 'vue'
 import axios from "axios";
 import {showToast} from "vant";
 import qs from "qs";
+import { useUserStore } from "@/stores/index.js";
+
+const userStore = useUserStore()
 
 const onClickLeft = () => history.back();
 const cart_list = ref([])
@@ -10,6 +13,9 @@ const cart_list = ref([])
 const base_url = 'http://www.kangliuyong.com:10002'
 const token = localStorage.getItem('token');
 const key = 'U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA='
+
+// token校验
+userStore.checkToken()
 
 // 获取购物车列表
 const getShopCart = () => {

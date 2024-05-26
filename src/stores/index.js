@@ -6,7 +6,8 @@ pinia.use(persist)
 
 export default pinia
 
-export * from './modules/login_register.js'
+export * from './modules/user.js'
+export * from './modules/channel.js'
 
 
 

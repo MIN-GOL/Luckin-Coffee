@@ -1,48 +1,20 @@
 <script setup>
-import { defineStore } from 'pinia'
 import router from "@/router/index.js";
+import {
+  useUserStore,
+  useChannelStore
+} from '@/stores/index.js'
+
+const userStore = useUserStore()
+const channelStore = useChannelStore()
+
 import {ref} from 'vue'
 import axios from "axios";
 import qs from 'qs';
 
-
-const useUserStore = defineStore(
-    'luckin-coffee',
-    () => {
-      const token = ref('')
-
-      const setToken = (newToken) => {
-        token.value = newToken
-      }
-      const removeToken = () => {
-        token.value = ''
-      }
-    }
-)
-
-const showPassword = ref(false);
-const show = ref(false)
-const isLogin = ref(true)
-const from = ref()
-const base_url = 'http://www.kangliuyong.com:10002'
 const pattern_phone = ref(/^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/)
 const pattern_email = ref(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/)
 
-// 表单数据绑定
-const formModel = ref({
-  // 登录和忘记密码共用
-  phone: '',
-  password: '',
-
-  // 注册
-  nickname: '',
-  regphone: '',
-  regpassword: '',
-
-  // 忘记密码
-  email: '',
-  sms: ''
-})
 
 // 登录请求
 const onSubmitLogin = (values) => {
@@ -55,7 +27,7 @@ const onSubmitLogin = (values) => {
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     data: qs.stringify(data),
-    url: `${base_url}/login`,
+    url: `${channelStore.base_url}/login`,
   };
   axios(options).then(function (res) {
     res = res.data
@@ -81,46 +53,27 @@ const onSubmitLogin = (values) => {
 const onSubmitRegister = (values) => {
   const data = {
     'appkey': 'U2FsdGVkX19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA=',
-    'phone' : `${values.regphone}`,
+    'phone': `${values.regphone}`,
     'password': `${values.regpassword}`,
     'nickName': `${values.nickname}`
   };
   const options = {
     method: 'POST',
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    headers: {'content-type': 'application/x-www-form-urlencoded'},
     data: qs.stringify(data),
-    url: `${base_url}/register`,
+    url: `${channelStore.base_url}/register`,
   };
   axios(options).then(function (res) {
     res = res.data
     // 登录成功
-    if(res.code === 100){
+    if (res.code === 100) {
       showSuccessToast(res.msg);
-      formModel.value.phone = values.regphone
+      formModel.phone = values.regphone
     }
-    if(res.code === 102){
+    if (res.code === 102) {
       showFailToast(res.msg);
     }
   })
-      .catch(function (err) {
-        showFailToast(err)
-      })
-};
-
-// 注册弹窗
-const showPopup = () => {
-  show.value = true;
-};
-
-// 忘记密码 (失败密码清空)
-const forget = () => {
-  isLogin.value = false;
-  formModel.value.password = ''
-}
-
-// 显示/隐藏密码
-const togglePassword = () => {
-  showPassword.value = !showPassword.value;
 };
 
 </script>
@@ -140,17 +93,17 @@ const togglePassword = () => {
     </template>
   </van-nav-bar>
   <!-- 登录 -->
-  <div class="login-box" v-if="isLogin">
+  <div class="login-box" v-if="userStore.isLogin">
     <div style="margin-left: 2rem">
       <div class="welcome-title">欢迎回来！</div>
       <div class="welcome-en">
         Please login to your accounts
       </div>
     </div>
-    <van-form @submit="onSubmitLogin" :model="formModel" ref="from">
+    <van-form @submit="onSubmitLogin" :model="userStore.formModel">
       <van-cell-group inset>
         <van-field
-            v-model="formModel.phone"
+            v-model="userStore.formModel.phone"
             name="phone"
             label="手机号"
             placeholder="手机号"
@@ -160,8 +113,8 @@ const togglePassword = () => {
             ]"
         />
         <van-field
-            v-model="formModel.password"
-            :type="showPassword ? 'text' : 'password'"
+            v-model="userStore.formModel.password"
+            :type="userStore.showPassword ? 'text' : 'password'"
             name="password"
             label="密码"
             placeholder="密码(6-16位)"
@@ -172,10 +125,10 @@ const togglePassword = () => {
             ]"
         >
           <template #button>
-            <van-icon name="eye-o" @click="togglePassword" />
+            <van-icon name="eye-o" @click="userStore.togglePassword" />
           </template>
         </van-field>
-        <div class="forget" @click="forget">忘记密码？</div>
+        <div class="forget" @click="userStore.forget">忘记密码？</div>
       </van-cell-group>
       <div style="margin: 16px">
         <van-button class="blue"
@@ -187,7 +140,7 @@ const togglePassword = () => {
     </van-form>
     <div style="margin: 16px">
       <van-button class="register_btn"
-                  @click="showPopup"
+                  @click="userStore.showPopup"
                   round block type="primary"
                   plain
                   style="margin-top: 2rem">
@@ -196,7 +149,7 @@ const togglePassword = () => {
     </div>
     <!-- 弹出注册功能 -->
     <van-popup
-        v-model:show="show"
+        v-model:show="userStore.show"
         position="bottom"
         closeable
         :style="{ height: '40%' }">
@@ -205,10 +158,10 @@ const togglePassword = () => {
           注册
         </div>
        <div class="register_from">
-         <van-form @submit="onSubmitRegister" :model="formModel" ref="from">
+         <van-form @submit="onSubmitRegister" :model="userStore.formModel">
            <van-cell-group inset>
              <van-field
-                 v-model="formModel.regphone"
+                 v-model="userStore.formModel.regphone"
                  name="regphone"
                  label="手机号"
                  placeholder="手机号"
@@ -218,8 +171,8 @@ const togglePassword = () => {
                  ]"
              />
              <van-field
-                 v-model="formModel.regpassword"
-                 :type="showPassword ? 'text' : 'password'"
+                 v-model="userStore.formModel.regpassword"
+                 :type="userStore.showPassword ? 'text' : 'password'"
                  name="regpassword"
                  label="密码"
                  placeholder="密码(6-16位)"
@@ -230,11 +183,11 @@ const togglePassword = () => {
                  ]"
              >
                <template #button>
-                 <van-icon name="eye-o" @click="togglePassword" />
+                 <van-icon name="eye-o" @click="userStore.togglePassword" />
                </template>
              </van-field>
              <van-field
-                 v-model="formModel.nickname"
+                 v-model="userStore.formModel.nickname"
                  name="nickname"
                  label="昵称"
                  placeholder="昵称(1-10位)"
@@ -266,10 +219,10 @@ const togglePassword = () => {
         forgot password!
       </div>
     </div>
-    <van-form @submit="onSubmit" :model="formModel" ref="from">
+    <van-form :model="userStore.formModel">
       <van-cell-group inset>
         <van-field
-            v-model="formModel.phone"
+            v-model="userStore.formModel.phone"
             name="手机号"
             label="手机号"
             placeholder="手机号"
@@ -279,8 +232,8 @@ const togglePassword = () => {
             ]"
         />
         <van-field
-            v-model="formModel.password"
-            :type="showPassword ? 'text' : 'password'"
+            v-model="userStore.formModel.password"
+            :type="userStore.showPassword ? 'text' : 'password'"
             name="新密码"
             label="新密码"
             placeholder="新密码(6-16位)"
@@ -295,7 +248,7 @@ const togglePassword = () => {
           </template>
         </van-field>
         <van-field
-            v-model="formModel.email"
+            v-model="userStore.formModel.email"
             type="email"
             name="邮箱"
             label="邮箱"
@@ -306,7 +259,7 @@ const togglePassword = () => {
             ]"
         />
         <van-field
-            v-model="formModel.sms"
+            v-model="userStore.formModel.sms"
             center
             clearable
             label="邮箱验证码"
@@ -320,7 +273,7 @@ const togglePassword = () => {
             <van-button class="blue" size="small" type="primary">发送验证码</van-button>
           </template>
         </van-field>
-        <div class="forget" @click="isLogin = true">已有账号，立即登录</div>
+        <div class="forget" @click="userStore.isLogin = true">已有账号，立即登录</div>
       </van-cell-group>
       <div style="margin: 16px;">
         <van-button class="blue"
