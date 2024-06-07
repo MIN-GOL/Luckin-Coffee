@@ -45,8 +45,9 @@ getTimeState()
   </van-swipe>
 
   <ul class="products">
-    <li style="list-style: none" v-for="(i, index) in HomeStore.hot" v-bind:key="index">
+    <li style="list-style: none; position: relative" v-for="(i, index) in HomeStore.hot" v-bind:key="index">
       <router-link class="item" :to="`/detail/${i.pid}`">
+      <div class="isHot" v-if="i.isHot === 1">热卖</div>
       <img :src="i.smallImg" alt="">
       <div class="iname">{{ i.name }}</div>
       <div class="enname">{{ i.enname }}</div>
@@ -74,6 +75,15 @@ getTimeState()
 
   li{
     width: 49%;
+  }
+  .isHot{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #ff0000;
+    color: #ffffff;
+    padding: 5px;
+    font-size: 12px;
   }
   img{
     width: 100%;

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { useChannelStore} from "@/stores/index.js";
+import { useChannelStore } from "@/stores/index.js";
 import router from "@/router/index.js";
 
 export const useUserStore = defineStore(

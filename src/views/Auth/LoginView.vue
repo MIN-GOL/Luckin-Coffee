@@ -65,10 +65,11 @@ const onSubmitRegister = (values) => {
   };
   axios(options).then(function (res) {
     res = res.data
-    // 登录成功
+    // 注册成功
     if (res.code === 100) {
       showSuccessToast(res.msg);
-      formModel.phone = values.regphone
+      userStore.formModel.phone = values.regphone
+      userStore.show = false
     }
     if (res.code === 102) {
       showFailToast(res.msg);

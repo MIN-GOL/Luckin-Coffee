@@ -8,7 +8,7 @@ export default pinia
 
 export * from './modules/user.js'
 export * from './modules/channel.js'
-
+export * from './modules/mine.js'
 
 
 

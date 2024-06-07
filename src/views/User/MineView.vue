@@ -1,29 +1,11 @@
 <script setup>
-import axios from 'axios'
-import {ref} from 'vue'
+import { useMineStore } from '@/stores/index.js'
 
-const base_url = 'http://www.kangliuyong.com:10002'
-const token = localStorage.getItem('token');
-const key = 'U2FsdGvkx19WSQ59Cg+Fj9jNZPxRC5y0xB1iV06BeNA='
-const username = ref()
-const desc = ref()
+const mineStore = useMineStore()
+const { getInfo } = mineStore
 
-// 获取个人信息
-axios.get(`${base_url}/findMy`, {
-  params: {
-    tokenString: token,
-    appkey: key
-  }
-}).then(function (res) {
-  res = res.data
-  if (res.code === 'A001') {
-    username.value = res.result[0].nickName
-    let info = res.result[0].desc
-    if (!info) {
-      desc.value = '这家伙很懒，什么也没有留下！'
-    }else desc.value = info
-  }
-})
+getInfo()
+
 </script>
 
 <template>
@@ -36,14 +18,14 @@ axios.get(`${base_url}/findMy`, {
             round
             width="3rem"
             height="3rem"
-            src="https://img2.imgtp.com/2024/05/17/DKvg3eWo.jpg"
+            :src=mineStore.userImg
         />
         <div class="info">
           <div class="name">
-            {{ username }}
+            {{ mineStore.username }}
           </div>
           <div class="desc">
-            {{ desc }}
+            {{ mineStore.desc }}
           </div>
         </div>
       </div>
